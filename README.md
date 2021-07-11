@@ -5,7 +5,7 @@ This is a video chat web based application that allows you to do group video cal
 This app is build using NodeJS, Socket.io, and Peerjs(WebRTC)
 
 ##  Design Documentation
-link
+https://github.com/NiharikaChhabra700/MSteams11/blob/main/Design%20Documentation.docx
 
 ## Screenshots
 
