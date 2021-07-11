@@ -11,3 +11,6 @@ link
 
 ## Landing page
 ![](images/landingpage.PNG)
+
+## Main page
+![](images/mainpage.PNG)
