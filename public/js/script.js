@@ -1,9 +1,9 @@
-const socket = io("/");
+const socket = io("/"); // because our server is setup at root path '/'
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
-myVideo.muted = true;
+myVideo.muted = true; // because we don't want to listen to our own video
 
 backBtn.addEventListener("click", () => {
   document.querySelector(".main__left").style.display = "flex";
@@ -21,11 +21,16 @@ showChat.addEventListener("click", () => {
 
 const user = prompt("Enter your name");
 
+// setting up the connection to the peer server
+// first param is undefined so that server can take care of generating a new id
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
   port: "3030",
 });
+
+// peer server is going to take all of the webrtc information of a user and generate a unique client id for that user, which can be used to connect with 
+// other peers on the network
 
 let mypeer = {}
 let myVideoStream;
@@ -34,7 +39,7 @@ navigator.mediaDevices
     audio: true,
     video: true,
   })
-  .then((stream) => {
+  .then((stream) => { // stream -> our video and our audio
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
 
@@ -53,12 +58,15 @@ navigator.mediaDevices
   });
 
 const connectToNewUser = (userId, stream) => {
-  const call = peer.call(userId, stream);
+  const call = peer.call(userId, stream);  // calling the user with userId (in param) and sending them our audio and video stream
   const video = document.createElement("video");
+  // and when user whom we have called and send our video stream to, sends their video stream we listen to that event and take in their video stream
   call.on("stream", (userVideoStream) => {
+     // taking the stream from other users and adding it onto our own custom video element on our page
     addVideoStream(video, userVideoStream);
   });
 
+  // removing video when someone closes the call
   call.on('close', () => {
     video.remove();
   })
@@ -70,14 +78,16 @@ socket.on('user-disconnect', (userId) => {
   if(mypeer[userId]) mypeer[userId].close();
 })
 
+// as soon as we are connected to the peer server and get back an id, send that id,along with room_id to our server for setting up connection
 peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id, user);
 });
 
 const addVideoStream = (video, stream) => {
-  video.srcObject = stream;
+  video.srcObject = stream;  // this will allow us to play our video
   video.addEventListener("loadedmetadata", () => {
     video.play();
+    // adding video to our video-grid
     videoGrid.append(video);
   });
 };
@@ -141,10 +151,7 @@ inviteButton.addEventListener("click", (e) => {
   );
 });
 
-// const leavemeeting=document.querySelector("#leavemeeting");
-// leavemeeting.addEventListener("click",function(){
 
-// })
 
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
