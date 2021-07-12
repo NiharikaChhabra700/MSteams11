@@ -7,12 +7,14 @@ Check out the deployed version of the same below:
 https://msteams11.herokuapp.com/
 
 ##  Design Documentation
+
 https://github.com/NiharikaChhabra700/MSteams11/blob/main/Design%20Documentation.docx
 
 ## Screenshots
 
 ## Landing page
 ![](images/landingpage.PNG)
+
 
 ## Main page
 ![](images/mainpage.PNG)
