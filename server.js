@@ -13,45 +13,36 @@ const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
   debug: true,
 });
-// app.get("/ended",(req,res)=>{
-//   console.log("ended clicked");
-  
-//   res.render("ended");
-// })
+
 app.use("/peerjs", peerServer);
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   res.render("ended");
 });
-//res.redirect(`/${uuidv4()}`)
+
 
 app.get("/meeting", (req, res) => {
-  res.redirect(`/meeting/${uuidv4()}`); //res.render("landing")
+  res.redirect(`/meeting/${uuidv4()}`); 
 });
 
 app.get("/meeting/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
 
-//app.post("/action", function (req, res) {
-  //   console.log(res.query);
- // return res.redirect("/ended");
-//});
 
+// this runs any time someone connects to our webpage
 io.on("connection", (socket) => {
+  // this runs when someone connects to a room
   socket.on("join-room", (roomId, userId, userName) => {
+    // allowing current socket to join the room
     socket.join(roomId);
+     // sending message to the other users in the room, current user is connected to
     socket.to(roomId).broadcast.emit("user-connected", userId);
+    
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
-
-    // socket.on('disconnect', () => {
-    //   res.render("ended");
-    //   console.log("hello")
-    //   socket.to(roomId).broadcast.emit('user-disconnect', userId)
-    // })
   });
 });
 
